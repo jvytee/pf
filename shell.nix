@@ -2,7 +2,8 @@ with import <nixpkgs> {};
 
 mkShell {
   buildInputs = [
-    python310
+    python39
+    python39Packages.pillow
     nodePackages.pyright
   ];
 }
