@@ -2,3 +2,5 @@
 *.png
 *.pf
 .envrc
+.cache/
+.direnv/
