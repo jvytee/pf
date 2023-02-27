@@ -1,24 +1,28 @@
 {
   outputs = { self, nixpkgs }: 
   let
-    system = "x86_64-linux";
+    systems = ["x86_64-linux"];
+    genAttrs = nixpkgs.lib.genAttrs systems;
   in
-  with import nixpkgs { inherit system; };
   {
-    devShells.${system}.default = clangStdenv.mkDerivation {
-      name = "pf-shell";
+    devShells = genAttrs (system:
+    with import nixpkgs { inherit system; };
+    {
+      default = clangStdenv.mkDerivation {
+        name = "pf-shell";
 
-      nativeBuildInputs = [
-        clang-tools
-        libpng
-      ];
+        nativeBuildInputs = [
+          check
+          clang-tools
+          libpng
+        ];
 
-      buildInputs = [
-        clang-tools
-        meson
-        ninja
-        pkg-config
-      ];
-    };
+        buildInputs = [
+          meson
+          ninja
+          pkg-config
+        ];
+      };
+    });
   };
 }
