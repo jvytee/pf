@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef IMAGE_H
+#define IMAGE_H
 
 #include <png.h>
 #include <stdint.h>
@@ -12,6 +12,7 @@ struct image {
   uint8_t **pixels;
 };
 
-int read_png(FILE*, struct image*);
+int read_png(FILE *, struct image *);
+int commands(char *cmd, const struct image *);
 
 #endif
