@@ -78,7 +78,8 @@ int commands(char *cmds, const struct image *img) {
         continue;
       }
 
-      bytes_written = snprintf(cmd_ptr, 21, "PX %u %u %02x%02x%02x\n", x, y, pixel[0], pixel[1], pixel[2]);
+      bytes_written = snprintf(cmd_ptr, 21, "PX %u %u %02x%02x%02x\n", x, y,
+                               pixel[0], pixel[1], pixel[2]);
       if (bytes_written < 0) {
         return bytes_written;
       }
