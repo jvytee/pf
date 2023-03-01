@@ -1,10 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "cli.h"
 #include "image.h"
 
-int main(void) {
-  FILE *fp = fopen("sea-watch_logo_140.png", "rb");
+int main(const int argc, char *const *argv) {
+  struct arguments args;
+  if (parse_arguments(argc, argv, &args) != EXIT_SUCCESS) {
+    return EXIT_FAILURE;
+  }
+
+  FILE *fp = fopen(args.image, "rb");
   if (!fp) {
     printf("Could not open file\n");
     return EXIT_FAILURE;
@@ -23,7 +29,12 @@ int main(void) {
 
   char *cmds = calloc(img.height * img.width * 20 + 1, sizeof(char));
   commands(cmds, &img);
-  printf("%s", cmds);
+
+  if (args.host != NULL) {
+    printf("Not implemented\n");
+  } else {
+    printf("%s", cmds);
+  }
 
   free(cmds);
   for (uint32_t y = 0; y < img.height; y++) {
