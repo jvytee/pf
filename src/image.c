@@ -51,8 +51,21 @@ int read_png(FILE *fp, struct image *img) {
   img->width = width;
   img->channels = channels;
 
-  img->pixels = calloc(height * width * channels, sizeof(uint8_t));
-  memcpy(img->pixels, rows, height * width * channels * sizeof(uint8_t));
+  img->pixels = calloc(height, sizeof(uint8_t *));
+  if (img->pixels == NULL) {
+    png_destroy_read_struct(&png_ptr, &info_ptr, &info_end_ptr);
+    return EXIT_FAILURE;
+  }
+
+  for (uint32_t y = 0; y < height; y++) {
+    img->pixels[y] = calloc(width * channels, sizeof(uint8_t));
+    if (img->pixels[y] == NULL) {
+      png_destroy_read_struct(&png_ptr, &info_ptr, &info_end_ptr);
+      return EXIT_FAILURE;
+    }
+
+    memcpy(img->pixels[y], rows[y], width * channels * sizeof(uint8_t));
+  }
 
   png_destroy_read_struct(&png_ptr, &info_ptr, &info_end_ptr);
   return EXIT_SUCCESS;

@@ -24,7 +24,12 @@ int main(void) {
   char *cmds = calloc(img.height * img.width * 20 + 1, sizeof(char));
   commands(cmds, &img);
   printf("%s", cmds);
+
   free(cmds);
+  for (uint32_t y = 0; y < img.height; y++) {
+    free(img.pixels[y]);
+  }
+  free(img.pixels);
 
   return EXIT_SUCCESS;
 }
