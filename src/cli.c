@@ -22,7 +22,7 @@ int parse_arguments(const int argc, char *const *argv,
       break;
     case 'h':
       printf("Usage: pf [-H <host>] [-p <port>] <image>\n");
-      return EXIT_FAILURE;
+      return -1;
     default:
       return EXIT_FAILURE;
     }

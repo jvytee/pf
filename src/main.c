@@ -6,8 +6,15 @@
 
 int main(const int argc, char *const *argv) {
   struct arguments args;
-  if (parse_arguments(argc, argv, &args) != EXIT_SUCCESS) {
-    return EXIT_FAILURE;
+  switch(parse_arguments(argc, argv, &args)) {
+    case EXIT_SUCCESS:
+      break;
+    case -1:
+      return EXIT_SUCCESS;
+      break;
+    default:
+      printf("Could not parse command line arguments\n");
+      return EXIT_FAILURE;
   }
 
   FILE *fp = fopen(args.image, "rb");

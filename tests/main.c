@@ -9,8 +9,9 @@ START_TEST(test_cli)
   char *const argv[] = {"pf", image};
 
   struct arguments args;
-  parse_arguments(2, argv, &args);
+  int res = parse_arguments(2, argv, &args);
 
+  ck_assert_int_eq(res, EXIT_SUCCESS);
   ck_assert_str_eq(args.image, image);
   ck_assert_ptr_null(args.host);
   ck_assert_int_eq(args.port, 0);
@@ -26,11 +27,23 @@ START_TEST(test_cli_network)
   char *const argv[] = {"pf", image, "-H", host, "-p", port};
 
   struct arguments args;
-  parse_arguments(6, argv, &args);
+  int res = parse_arguments(6, argv, &args);
 
+  ck_assert_int_eq(res, EXIT_SUCCESS);
   ck_assert_str_eq(args.image, image);
   ck_assert_str_eq(args.host, host);
   ck_assert_int_eq(args.port, port_num);
+}
+END_TEST
+
+START_TEST(test_cli_help)
+{
+  char *const argv[] = {"pf", "-h"};
+
+  struct arguments args;
+  int res = parse_arguments(2, argv, &args);
+
+  ck_assert_int_eq(res, -1);
 }
 END_TEST
 
@@ -40,6 +53,7 @@ Suite *main_suite(void) {
 
   tcase_add_test(tc, test_cli);
   tcase_add_test(tc, test_cli_network);
+  tcase_add_test(tc, test_cli_help);
 
   suite_add_tcase(s, tc);
   return s;
