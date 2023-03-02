@@ -4,7 +4,7 @@ png_dep = dependency('libpng')
 thread_dep = dependency('threads')
 check_dep = dependency('check')
 
-src = ['src/main.c', 'src/cli.c', 'src/image.c']
+src = ['src/main.c', 'src/cli.c', 'src/image.c', 'src/network.c']
 inc = include_directories('include')
 executable('pf', src, dependencies: [png_dep, thread_dep], include_directories: inc)
 

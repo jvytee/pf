@@ -3,18 +3,19 @@
 
 #include "cli.h"
 #include "image.h"
+#include "network.h"
 
 int main(const int argc, char *const *argv) {
   struct arguments args;
-  switch(parse_arguments(argc, argv, &args)) {
-    case EXIT_SUCCESS:
-      break;
-    case -1:
-      return EXIT_SUCCESS;
-      break;
-    default:
-      printf("Could not parse command line arguments\n");
-      return EXIT_FAILURE;
+  switch (parse_arguments(argc, argv, &args)) {
+  case EXIT_SUCCESS:
+    break;
+  case -1:
+    return EXIT_SUCCESS;
+    break;
+  default:
+    printf("Could not parse command line arguments\n");
+    return EXIT_FAILURE;
   }
 
   FILE *fp = fopen(args.image, "rb");
@@ -38,7 +39,9 @@ int main(const int argc, char *const *argv) {
   commands(cmds, &img);
 
   if (args.host != NULL) {
-    printf("Not implemented\n");
+    if (send_forever(args.host, args.port, cmds) != EXIT_SUCCESS) {
+      printf("Could not send commands\n");
+    }
   } else {
     printf("%s", cmds);
   }
