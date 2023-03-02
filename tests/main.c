@@ -17,13 +17,31 @@ START_TEST(test_cli)
 }
 END_TEST
 
+START_TEST(test_cli_network)
+{
+  char *const image = "some_image.png";
+  char *const host = "example.org";
+  char *const port = "1234";
+  uint16_t port_num = 1234;
+  char *const argv[] = {"pf", image, "-H", host, "-p", port};
+
+  struct arguments args;
+  parse_arguments(6, argv, &args);
+
+  ck_assert_str_eq(args.image, image);
+  ck_assert_str_eq(args.host, host);
+  ck_assert_int_eq(args.port, port_num);
+}
+END_TEST
+
 Suite *main_suite(void) {
   Suite *s = suite_create("Main");
   TCase *tc = tcase_create("Core");
 
   tcase_add_test(tc, test_cli);
-  suite_add_tcase(s, tc);
+  tcase_add_test(tc, test_cli_network);
 
+  suite_add_tcase(s, tc);
   return s;
 }
 
