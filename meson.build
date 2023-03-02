@@ -1,12 +1,13 @@
 project('pf', 'c', default_options: ['werror=true', 'buildtype=debugoptimized', 'warning_level=3'])
 
-pngdep = dependency('libpng')
-checkdep = dependency('check')
+png_dep = dependency('libpng')
+thread_dep = dependency('threads')
+check_dep = dependency('check')
 
 src = ['src/main.c', 'src/cli.c', 'src/image.c']
-include_dirs = include_directories('include')
-executable('pf', src, dependencies: pngdep, include_directories: include_dirs)
+inc = include_directories('include')
+executable('pf', src, dependencies: [png_dep, thread_dep], include_directories: inc)
 
-src_check = ['tests/main.c', 'src/cli.c']
-pfcheck = executable('pfcheck', src_check, dependencies: checkdep, include_directories: include_dirs)
+pfcheck_src = ['tests/main.c', 'src/cli.c']
+pfcheck = executable('pfcheck', pfcheck_src, dependencies: check_dep, include_directories: inc)
 test('Check pf', pfcheck)
