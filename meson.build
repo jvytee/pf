@@ -4,7 +4,9 @@ pngdep = dependency('libpng')
 checkdep = dependency('check')
 
 src = ['src/main.c', 'src/cli.c', 'src/image.c']
-executable('pf', src, dependencies: pngdep)
+include_dirs = include_directories('include')
+executable('pf', src, dependencies: pngdep, include_directories: include_dirs)
 
-maintest = executable('test_main', 'tests/test_main.c', dependencies: checkdep)
-test('Main test', maintest)
+src_check = ['tests/main.c', 'src/cli.c']
+pfcheck = executable('pfcheck', src_check, dependencies: checkdep, include_directories: include_dirs)
+test('Check pf', pfcheck)
