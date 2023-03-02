@@ -23,6 +23,14 @@
           pkg-config
         ];
       };
+
+      python = mkShell {
+        buildInputs = [
+          python39
+          python39Packages.pillow
+          nodepackages.pyright
+        ];
+      };
     });
   };
 }
