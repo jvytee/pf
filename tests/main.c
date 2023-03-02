@@ -1,9 +1,19 @@
 #include <check.h>
 #include <stdlib.h>
 
-START_TEST(example_test)
+#include "cli.h"
+
+START_TEST(test_cli)
 {
-  ck_assert_int_eq(1, 1);
+  char *const image = "some_image.png";
+  char *const argv[] = {"pf", image};
+
+  struct arguments args;
+  parse_arguments(2, argv, &args);
+
+  ck_assert_str_eq(args.image, image);
+  ck_assert_ptr_null(args.host);
+  ck_assert_int_eq(args.port, 0);
 }
 END_TEST
 
@@ -11,7 +21,7 @@ Suite *main_suite(void) {
   Suite *s = suite_create("Main");
   TCase *tc = tcase_create("Core");
 
-  tcase_add_test(tc, example_test);
+  tcase_add_test(tc, test_cli);
   suite_add_tcase(s, tc);
 
   return s;
