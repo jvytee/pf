@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 #include <netdb.h>
+#include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,7 +10,18 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+static volatile int keep_sending = 1;
+
+void handle_signal(int sig) {
+  switch (sig) {
+  default:
+    keep_sending = 0;
+  }
+}
+
 int send_forever(const char *host, const uint16_t port, const char *cmds) {
+  signal(SIGINT, handle_signal);
+
   struct addrinfo hints;
   struct addrinfo *res;
   char port_str[5];
@@ -54,7 +66,7 @@ int send_forever(const char *host, const uint16_t port, const char *cmds) {
     return EXIT_FAILURE;
   }
 
-  while (sendfile(sockfd, memfd, 0, strlen(cmds)) > 0) {
+  while (keep_sending && sendfile(sockfd, memfd, 0, strlen(cmds)) > 0) {
     lseek(memfd, 0, SEEK_SET);
   }
 
