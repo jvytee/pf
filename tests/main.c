@@ -3,8 +3,7 @@
 
 #include "cli.h"
 
-START_TEST(test_cli)
-{
+START_TEST(test_cli) {
   char *const image = "some_image.png";
   char *const argv[] = {"pf", image};
 
@@ -18,8 +17,7 @@ START_TEST(test_cli)
 }
 END_TEST
 
-START_TEST(test_cli_network)
-{
+START_TEST(test_cli_network) {
   char *const image = "some_image.png";
   char *const host = "example.org";
   char *const port = "1234";
@@ -36,8 +34,7 @@ START_TEST(test_cli_network)
 }
 END_TEST
 
-START_TEST(test_cli_help)
-{
+START_TEST(test_cli_help) {
   char *const argv[] = {"pf", "-h"};
 
   struct arguments args;
@@ -66,6 +63,6 @@ int main(void) {
   srunner_run_all(sr, CK_NORMAL);
   int total = srunner_ntests_run(sr);
   int failed = srunner_ntests_failed(sr);
-  
+
   return total > 0 && failed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }

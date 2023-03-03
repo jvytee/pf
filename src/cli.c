@@ -5,8 +5,7 @@
 #include "bits/getopt_core.h"
 #include "cli.h"
 
-int parse_arguments(const int argc, char *const *argv,
-                     struct arguments *args) {
+int parse_arguments(const int argc, char *const *argv, struct arguments *args) {
   args->image = NULL;
   args->host = NULL;
   args->port = 0;

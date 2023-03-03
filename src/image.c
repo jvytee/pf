@@ -12,8 +12,7 @@ int read_png(FILE *fp, struct image *img) {
     return EXIT_FAILURE;
   }
 
-  png_structp png_ptr =
-      png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if (!png_ptr) {
     return EXIT_FAILURE;
   }
@@ -32,10 +31,7 @@ int read_png(FILE *fp, struct image *img) {
 
   png_set_sig_bytes(png_ptr, 8);
   png_init_io(png_ptr, fp);
-  png_read_png(png_ptr, info_ptr,
-               PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_EXPAND |
-                   PNG_TRANSFORM_GRAY_TO_RGB,
-               NULL);
+  png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_STRIP_16 | PNG_TRANSFORM_EXPAND | PNG_TRANSFORM_GRAY_TO_RGB, NULL);
 
   uint32_t height = png_get_image_height(png_ptr, info_ptr);
   uint32_t width = png_get_image_width(png_ptr, info_ptr);
@@ -91,8 +87,7 @@ int commands(char *cmds, const struct image *img) {
         continue;
       }
 
-      bytes_written = snprintf(cmd_ptr, 21, "PX %u %u %02x%02x%02x\n", x, y,
-                               pixel[0], pixel[1], pixel[2]);
+      bytes_written = snprintf(cmd_ptr, 21, "PX %u %u %02x%02x%02x\n", x, y, pixel[0], pixel[1], pixel[2]);
       if (bytes_written < 0) {
         return bytes_written;
       }
