@@ -1,18 +1,34 @@
+#define _GNU_SOURCE
 #include <netdb.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
 #include <sys/sendfile.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 int send_forever(const char *host, const uint16_t port, const char *cmds) {
-  int retval = EXIT_FAILURE;
   struct addrinfo hints;
   struct addrinfo *res;
   char port_str[5];
   snprintf(port_str, 5, "%d", port);
+
+  int memfd = memfd_create("cmds.txt", 0);
+  if (memfd == -1) {
+    return EXIT_FAILURE;
+  }
+
+  if (write(memfd, cmds, strlen(cmds) + 1) == -1) {
+    close(memfd);
+    return EXIT_FAILURE;
+  }
+
+  if (lseek(memfd, 0, SEEK_SET) != 0) {
+    close(memfd);
+    return EXIT_FAILURE;
+  }
 
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_UNSPEC;
@@ -20,31 +36,31 @@ int send_forever(const char *host, const uint16_t port, const char *cmds) {
   hints.ai_socktype = SOCK_STREAM;
   if (getaddrinfo(host, port_str, &hints, &res) != 0) {
     freeaddrinfo(res);
-    return retval;
+    close(memfd);
+    return EXIT_FAILURE;
   }
 
   int sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
   if (sockfd == -1) {
     freeaddrinfo(res);
-    return retval;
+    close(memfd);
+    return EXIT_FAILURE;
   }
 
   if (connect(sockfd, res->ai_addr, res->ai_addrlen) == -1) {
     close(sockfd);
     freeaddrinfo(res);
-    return retval;
+    close(memfd);
+    return EXIT_FAILURE;
   }
 
-  // FILE *buffer = fmemopen((void *)cmds, strlen(cmds) + 1, "r");
-  // int buffd = fileno(buffer);
-
-  if (write(sockfd, cmds, strlen(cmds)) > 0) {
-    retval = EXIT_SUCCESS;
+  while (sendfile(sockfd, memfd, 0, strlen(cmds)) > 0) {
+    lseek(memfd, 0, SEEK_SET);
   }
 
-  // fclose(buffer);
   close(sockfd);
   freeaddrinfo(res);
+  close(memfd);
 
   return EXIT_SUCCESS;
 }
