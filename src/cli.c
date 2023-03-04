@@ -21,16 +21,16 @@ int parse_arguments(const int argc, char *const *argv, struct arguments *args) {
       break;
     case 'h':
       printf("Usage: pf [-H <host>] [-p <port>] <image>\n");
-      return -1;
+      return CLI_HELP;
     default:
-      return EXIT_FAILURE;
+      return CLI_FAILURE;
     }
   }
 
   if (optind < (argc)) {
     args->image = argv[optind];
-    return EXIT_SUCCESS;
+    return CLI_SUCCESS;
   }
 
-  return EXIT_FAILURE;
+  return CLI_FAILURE;
 }

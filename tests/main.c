@@ -10,7 +10,7 @@ START_TEST(test_cli) {
   struct arguments args;
   int res = parse_arguments(2, argv, &args);
 
-  ck_assert_int_eq(res, EXIT_SUCCESS);
+  ck_assert_int_eq(res, CLI_SUCCESS);
   ck_assert_str_eq(args.image, image);
   ck_assert_ptr_null(args.host);
   ck_assert_int_eq(args.port, 0);
@@ -27,7 +27,7 @@ START_TEST(test_cli_network) {
   struct arguments args;
   int res = parse_arguments(6, argv, &args);
 
-  ck_assert_int_eq(res, EXIT_SUCCESS);
+  ck_assert_int_eq(res, CLI_SUCCESS);
   ck_assert_str_eq(args.image, image);
   ck_assert_str_eq(args.host, host);
   ck_assert_int_eq(args.port, port_num);
@@ -40,7 +40,7 @@ START_TEST(test_cli_help) {
   struct arguments args;
   int res = parse_arguments(2, argv, &args);
 
-  ck_assert_int_eq(res, -1);
+  ck_assert_int_eq(res, CLI_HELP);
 }
 END_TEST
 

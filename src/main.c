@@ -8,11 +8,12 @@
 int main(const int argc, char *const *argv) {
   struct arguments args;
   switch (parse_arguments(argc, argv, &args)) {
-  case EXIT_SUCCESS:
+  case CLI_SUCCESS:
     break;
-  case -1:
+  case CLI_HELP:
     return EXIT_SUCCESS;
     break;
+  case CLI_FAILURE:
   default:
     printf("Could not parse command line arguments\n");
     return EXIT_FAILURE;

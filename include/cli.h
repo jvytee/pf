@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#define CLI_FAILURE -1
+#define CLI_SUCCESS 0
+#define CLI_HELP 1
+
 struct arguments {
   char *image;
   char *host;
