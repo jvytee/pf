@@ -49,10 +49,7 @@ int main(const int argc, char *const *argv) {
   }
 
   free(cmds);
-  for (uint32_t y = 0; y < img.height; y++) {
-    free(img.pixels[y]);
-  }
-  free(img.pixels);
+  free_image(&img);
 
   return EXIT_SUCCESS;
 }

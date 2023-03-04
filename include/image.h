@@ -13,6 +13,7 @@ struct image {
 };
 
 int read_png(FILE *, struct image *);
+void free_image(struct image *);
 int commands(char *cmd, const struct image *);
 
 #endif

@@ -67,6 +67,13 @@ int read_png(FILE *fp, struct image *img) {
   return EXIT_SUCCESS;
 }
 
+void free_image(struct image *img) {
+  for (uint32_t y = 0; y < img->height; y++) {
+    free(img->pixels[y]);
+  }
+  free(img->pixels);
+}
+
 int commands(char *cmds, const struct image *img) {
   if (img->height > 9999 || img->width > 9999) {
     return -1;
