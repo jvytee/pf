@@ -21,18 +21,19 @@ int main(const int argc, char *const *argv) {
 
   FILE *fp = fopen(args.image, "rb");
   if (!fp) {
-    printf("Could not open file\n");
+    printf("Could not open %s\n", args.image);
     return EXIT_FAILURE;
   }
 
   struct image img;
   if (read_png(fp, &img) != 0) {
-    printf("Could not read PNG\n");
+    printf("Could not read PNG %s\n", args.image);
+    fclose(fp);
     return EXIT_FAILURE;
   }
 
   if (fclose(fp) != 0) {
-    printf("Could not close file\n");
+    printf("Could not close %s\n", args.image);
     return EXIT_FAILURE;
   }
 
