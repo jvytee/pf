@@ -1,2 +1,2 @@
 # pf
-Simple pixelflut client in C
+Simple pixelflut client for linux
