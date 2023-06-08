@@ -38,7 +38,7 @@ int main(const int argc, char *const *argv) {
   }
 
   char *cmds = calloc(img.height * img.width * 20 + 1, sizeof(char));
-  commands(cmds, &img);
+  commands(cmds, &img, args.x, args.y);
 
   if (args.host != NULL) {
     if (send_forever(args.host, args.port, cmds) != EXIT_SUCCESS) {

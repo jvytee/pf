@@ -74,7 +74,7 @@ void free_image(struct image *img) {
   free(img->pixels);
 }
 
-int commands(char *cmds, const struct image *img) {
+int commands(char *cmds, const struct image *img, const uint32_t x_offset, const uint32_t y_offset) {
   if (img->height > 9999 || img->width > 9999) {
     return -1;
   }
@@ -94,7 +94,7 @@ int commands(char *cmds, const struct image *img) {
         continue;
       }
 
-      bytes_written = snprintf(cmd_ptr, 21, "PX %u %u %02x%02x%02x\n", x, y, pixel[0], pixel[1], pixel[2]);
+      bytes_written = snprintf(cmd_ptr, 21, "PX %u %u %02x%02x%02x\n", x + x_offset, y + y_offset, pixel[0], pixel[1], pixel[2]);
       if (bytes_written < 0) {
         return bytes_written;
       }

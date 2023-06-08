@@ -11,6 +11,8 @@ struct arguments {
   char *image;
   char *host;
   uint16_t port;
+  uint32_t x;
+  uint32_t y;
 };
 
 int parse_arguments(const int, char *const *, struct arguments *);
