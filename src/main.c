@@ -51,12 +51,11 @@ int main(const int argc, char *const *argv) {
 
   lprintf(LOG_INFO, "Serializing %d pixelflut commands\n", len_cmds);
   char *cmds_serialized = calloc(len_cmds * 20 + 1, sizeof(char));
-  serialize_commands(cmds_serialized, cmds, len_cmds);
+  size_t len_serialized = serialize_commands(cmds_serialized, cmds, len_cmds);
 
-  lprintf(LOG_INFO, "Quantizing pixelflut command string\n");
-  const size_t len_buffer = 1 * 1024 * 1024;
-  char *cmds_quantized = calloc(len_buffer, sizeof(char));
-  const size_t len_command_string = quantize_command_string(cmds_quantized, cmds_serialized, len_buffer);
+  lprintf(LOG_INFO, "Quantizing %d bytes pixelflut command string\n", len_serialized);
+  char *cmds_quantized = calloc(args.len_buffer, sizeof(char));
+  const size_t len_command_string = quantize_command_string(cmds_quantized, cmds_serialized, args.len_buffer);
 
   lprintf(LOG_INFO, "Sending %d bytes pixelflut command string to %s:%d\n", len_command_string, args.host, args.port);
   if (args.host != NULL) {

@@ -12,10 +12,11 @@ int parse_arguments(const int argc, char *const *argv, struct arguments *args) {
   args->port = 1234;
   args->x = 0;
   args->y = 0;
+  args->len_buffer = 1 * 1024 * 1024;
   args->log_level = LOG_ERROR;
 
   int opt;
-  while ((opt = getopt(argc, argv, "hH:p:x:y:v")) != -1) {
+  while ((opt = getopt(argc, argv, "hvH:p:x:y:b:")) != -1) {
     switch (opt) {
     case 'H':
       args->host = optarg;
@@ -28,6 +29,9 @@ int parse_arguments(const int argc, char *const *argv, struct arguments *args) {
       break;
     case 'y':
       args->y = atoi(optarg);
+      break;
+    case 'b':
+      args->len_buffer = atoi(optarg);
       break;
     case 'v':
       args->log_level = LOG_INFO;
