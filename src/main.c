@@ -20,6 +20,8 @@ int main(const int argc, char *const *argv) {
     return EXIT_FAILURE;
   }
 
+  set_log_level(args.log_level);
+
   FILE *fp = fopen(args.image, "rb");
   if (!fp) {
     lprintf(LOG_ERROR, "Could not open %s\n", args.image);

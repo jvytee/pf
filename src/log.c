@@ -6,6 +6,10 @@
 
 uint8_t LOG_LEVEL = LOG_ERROR;
 
+void set_log_level(const uint8_t level) {
+  LOG_LEVEL = level;
+}
+
 void lprintf(const uint8_t level, const char *message, ...) {
   if (level >= LOG_LEVEL) {
     va_list args;

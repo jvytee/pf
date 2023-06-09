@@ -13,6 +13,7 @@ struct arguments {
   uint16_t port;
   uint32_t x;
   uint32_t y;
+  uint8_t log_level;
 };
 
 int parse_arguments(const int, char *const *, struct arguments *);
