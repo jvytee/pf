@@ -13,15 +13,15 @@ START_TEST(test_cli) {
   ck_assert_int_eq(res, CLI_SUCCESS);
   ck_assert_str_eq(args.image, image);
   ck_assert_ptr_null(args.host);
-  ck_assert_int_eq(args.port, 0);
+  ck_assert_int_eq(args.port, 1234);
 }
 END_TEST
 
 START_TEST(test_cli_network) {
   char *const image = "some_image.png";
   char *const host = "example.org";
-  char *const port = "1234";
-  uint16_t port_num = 1234;
+  char *const port = "4321";
+  uint16_t port_num = 4321;
   char *const argv[] = {"pf", image, "-H", host, "-p", port};
 
   struct arguments args;

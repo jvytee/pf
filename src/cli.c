@@ -8,7 +8,7 @@
 int parse_arguments(const int argc, char *const *argv, struct arguments *args) {
   args->image = NULL;
   args->host = NULL;
-  args->port = 0;
+  args->port = 1234;
   args->x = 0;
   args->y = 0;
 
