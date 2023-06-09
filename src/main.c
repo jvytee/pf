@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "cli.h"
 #include "image.h"
@@ -42,16 +43,25 @@ int main(const int argc, char *const *argv) {
   }
 
   lprintf(LOG_INFO, "Creating pixelflut commands\n");
-  char *cmds = calloc(img.height * img.width * 20 + 1, sizeof(char));
-  commands(cmds, &img, args.x, args.y);
+  struct command **cmds = calloc(img.height * img.width, sizeof(struct command*));
+  const size_t len_cmds = generate_commands(cmds, &img, args.x, args.y);
+
+  lprintf(LOG_INFO, "Serializing pixelflut commands\n");
+  char *cmds_serialized = calloc(len_cmds * 20 + 1, sizeof(char));
+  serialize_commands(cmds_serialized, cmds, len_cmds);
+
+  lprintf(LOG_INFO, "Quantizing pixelflut command string\n");
+  const size_t len_buffer = 1 * 1024 * 1024;
+  char *cmds_quantized = calloc(len_buffer, sizeof(char));
+  quantize_command_string(cmds_quantized, cmds_serialized, len_buffer);
 
   lprintf(LOG_INFO, "Sending pixelflut commands to %s:%d\n", args.host, args.port);
   if (args.host != NULL) {
-    if (send_forever(args.host, args.port, cmds) != EXIT_SUCCESS) {
+    if (send_forever(args.host, args.port, cmds_quantized) != EXIT_SUCCESS) {
       lprintf(LOG_ERROR, "Could not send commands to %s:%d\n", args.host, args.port);
     }
   } else {
-    printf("%s", cmds);
+    printf("%s", cmds_quantized);
   }
 
   free(cmds);

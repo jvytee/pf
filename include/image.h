@@ -12,8 +12,16 @@ struct image {
   uint8_t **pixels;
 };
 
+struct command {
+  uint32_t x;
+  uint32_t y;
+  char *color;
+};
+
 int read_png(FILE *, struct image *);
 void free_image(struct image *);
-int commands(char *cmd, const struct image *, const uint32_t, const uint32_t);
+int generate_commands(struct command **, const struct image *, const uint32_t, const uint32_t);
+int serialize_commands(char *, struct command *const *, const size_t);
+int quantize_command_string(char *, const char *, const size_t);
 
 #endif

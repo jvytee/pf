@@ -74,16 +74,15 @@ void free_image(struct image *img) {
   free(img->pixels);
 }
 
-int commands(char *cmds, const struct image *img, const uint32_t x_offset, const uint32_t y_offset) {
+int generate_commands(struct command **cmds, const struct image *img, const uint32_t x_offset, const uint32_t y_offset) {
   if (img->height > 9999 || img->width > 9999) {
     return -1;
   }
 
-  char *cmd_ptr = cmds;
+  size_t i = 0;
   uint8_t *row;
   uint8_t *pixel;
   int bytes_written;
-  int bytes_total = 0;
 
   for (uint32_t y = 0; y < img->height; y++) {
     row = img->pixels[y];
@@ -94,14 +93,50 @@ int commands(char *cmds, const struct image *img, const uint32_t x_offset, const
         continue;
       }
 
-      bytes_written = snprintf(cmd_ptr, 21, "PX %u %u %02x%02x%02x\n", x + x_offset, y + y_offset, pixel[0], pixel[1], pixel[2]);
+      struct command *cmd = malloc(sizeof(struct command));
+      cmd->x = x + x_offset;
+      cmd->y = y + y_offset;
+      cmd->color = calloc(7, sizeof(char));
+      bytes_written = snprintf(cmd->color, 7, "%02x%02x%02x", pixel[0], pixel[1], pixel[2]);
       if (bytes_written < 0) {
         return bytes_written;
       }
 
-      bytes_total += bytes_written;
-      cmd_ptr += bytes_written;
+      cmds[i] = cmd;
+      i++;
     }
+  }
+
+  return i;
+}
+
+int serialize_commands(char *serialized, struct command *const *cmds, const size_t n) {
+  char *serialized_ptr = serialized;
+  const struct command *cmd;
+  int bytes_written;
+  int bytes_total = 0;
+
+  for (size_t i = 0; i < n; i++) {
+    cmd = cmds[i];
+    bytes_written = snprintf(serialized_ptr, 21, "PX %u %u %s\n", cmd->x, cmd->y, cmd->color);
+    if (bytes_written < 0) {
+      return bytes_written;
+    }
+
+    bytes_total += bytes_written;
+    serialized_ptr += bytes_written;
+  }
+
+  return bytes_total;
+}
+
+int quantize_command_string(char *quantized, const char *cmds, const size_t n) {
+  const size_t bytes_cmds = strlen(cmds);
+  int bytes_total = 0;
+
+  while (strlen(quantized) + bytes_cmds < n) {
+    strncat(quantized, cmds, bytes_cmds);
+    bytes_total += bytes_cmds;
   }
 
   return bytes_total;
