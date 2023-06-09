@@ -66,7 +66,8 @@ int send_forever(const char *host, const uint16_t port, const char *cmds) {
     return EXIT_FAILURE;
   }
 
-  while (keep_sending && sendfile(sockfd, memfd, 0, strlen(cmds)) > 0) {
+  size_t len_cmds = strlen(cmds);
+  while (keep_sending && sendfile(sockfd, memfd, NULL, len_cmds) > 0) {
     lseek(memfd, 0, SEEK_SET);
   }
 
