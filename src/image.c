@@ -74,7 +74,8 @@ void free_image(struct image *img) {
   free(img->pixels);
 }
 
-int generate_commands(struct command **cmds, const struct image *img, const uint32_t x_offset, const uint32_t y_offset) {
+int generate_commands(struct command **cmds, const struct image *img, const uint32_t x_offset,
+                      const uint32_t y_offset) {
   if (img->height > 9999 || img->width > 9999) {
     return -1;
   }
@@ -108,6 +109,19 @@ int generate_commands(struct command **cmds, const struct image *img, const uint
   }
 
   return i;
+}
+
+void shuffle_commands(struct command **cmds, const size_t n) {
+  size_t j;
+  struct command *tmp;
+  for (size_t i = n - 1; i > 0; i--) {
+    j = random() % i;
+    if (i != j) {
+      tmp = cmds[i];
+      cmds[i] = cmds[j];
+      cmds[j] = tmp;
+    }
+  }
 }
 
 int serialize_commands(char *serialized, struct command *const *cmds, const size_t n) {

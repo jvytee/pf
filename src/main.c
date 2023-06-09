@@ -46,16 +46,19 @@ int main(const int argc, char *const *argv) {
   struct command **cmds = calloc(img.height * img.width, sizeof(struct command*));
   const size_t len_cmds = generate_commands(cmds, &img, args.x, args.y);
 
-  lprintf(LOG_INFO, "Serializing pixelflut commands\n");
+  lprintf(LOG_INFO, "Shuffling %d pixelflut commands\n", len_cmds);
+  shuffle_commands(cmds, len_cmds);
+
+  lprintf(LOG_INFO, "Serializing %d pixelflut commands\n", len_cmds);
   char *cmds_serialized = calloc(len_cmds * 20 + 1, sizeof(char));
   serialize_commands(cmds_serialized, cmds, len_cmds);
 
   lprintf(LOG_INFO, "Quantizing pixelflut command string\n");
   const size_t len_buffer = 1 * 1024 * 1024;
   char *cmds_quantized = calloc(len_buffer, sizeof(char));
-  quantize_command_string(cmds_quantized, cmds_serialized, len_buffer);
+  const size_t len_command_string = quantize_command_string(cmds_quantized, cmds_serialized, len_buffer);
 
-  lprintf(LOG_INFO, "Sending pixelflut commands to %s:%d\n", args.host, args.port);
+  lprintf(LOG_INFO, "Sending %d bytes pixelflut command string to %s:%d\n", len_command_string, args.host, args.port);
   if (args.host != NULL) {
     if (send_forever(args.host, args.port, cmds_quantized) != EXIT_SUCCESS) {
       lprintf(LOG_ERROR, "Could not send commands to %s:%d\n", args.host, args.port);
