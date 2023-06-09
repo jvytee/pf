@@ -141,3 +141,11 @@ int quantize_command_string(char *quantized, const char *cmds, const size_t n) {
 
   return bytes_total;
 }
+
+void free_commands(struct command **cmds, size_t n) {
+  for (size_t i = 0; i < n; i++) {
+    free(cmds[i]);
+  }
+
+  free(cmds);
+}

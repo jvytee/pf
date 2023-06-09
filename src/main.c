@@ -64,7 +64,9 @@ int main(const int argc, char *const *argv) {
     printf("%s", cmds_quantized);
   }
 
-  free(cmds);
+  free(cmds_quantized);
+  free(cmds_serialized);
+  free_commands(cmds, len_cmds);
   free_image(&img);
 
   lprintf(LOG_INFO, "Done.\n");
