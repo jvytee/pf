@@ -4,7 +4,7 @@
 
 #include "log.h"
 
-uint8_t LOG_LEVEL = LOG_ERROR;
+static uint8_t LOG_LEVEL = LOG_ERROR;
 
 void set_log_level(const uint8_t level) {
   LOG_LEVEL = level;

@@ -10,8 +10,6 @@
 #define LOG_DEBUG 10
 #define LOG_NOTSET 0
 
-extern uint8_t LOG_LEVEL;
-
 void set_log_level(const uint8_t);
 void lprintf(const uint8_t, const char*, ...);
 
