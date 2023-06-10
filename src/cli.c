@@ -13,10 +13,11 @@ int parse_arguments(const int argc, char *const *argv, struct arguments *args) {
   args->x = 0;
   args->y = 0;
   args->len_buffer = 1 * 1024 * 1024;
+  args->num_workers = 1;
   args->log_level = LOG_ERROR;
 
   int opt;
-  while ((opt = getopt(argc, argv, "hvH:p:x:y:b:")) != -1) {
+  while ((opt = getopt(argc, argv, "hvH:p:x:y:b:w:")) != -1) {
     switch (opt) {
     case 'H':
       args->host = optarg;
@@ -33,11 +34,14 @@ int parse_arguments(const int argc, char *const *argv, struct arguments *args) {
     case 'b':
       args->len_buffer = atoi(optarg);
       break;
+    case 'w':
+      args->num_workers = atoi(optarg);
+      break;
     case 'v':
       args->log_level = LOG_INFO;
       break;
     case 'h':
-      printf("Usage: pf [-H <host>] [-p <port>] [-x <offset>] [-y <offset>] <image>\n");
+      printf("Usage: pf [-H <host>] [-p <port>] [-x <offset>] [-y <offset>] [-b <buffer size>] [-w <worker count>] <image>\n");
       return CLI_HELP;
     default:
       return CLI_FAILURE;

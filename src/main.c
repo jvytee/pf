@@ -85,18 +85,17 @@ int main(const int argc, char *const *argv) {
   lprintf(LOG_INFO, "Applying offsets (%d, %d) to %d pixelflut commands\n", args.x, args.y, len_cmds);
   apply_offsets(cmds, len_cmds, args.x, args.y);
 
-  size_t num_workers = 5;
   lprintf(LOG_INFO, "Starting %d worker threads\n");
-  pthread_t *worker_threads = calloc(num_workers, sizeof(pthread_t));
-  struct worker_args *worker_args = calloc(num_workers, sizeof(struct worker_args));
-  for (size_t i = 0; i < num_workers; i++) {
+  pthread_t *worker_threads = calloc(args.num_workers, sizeof(pthread_t));
+  struct worker_args *worker_args = calloc(args.num_workers, sizeof(struct worker_args));
+  for (size_t i = 0; i < args.num_workers; i++) {
     worker_args[i].cmds = cmds;
     worker_args[i].len_cmds = len_cmds;
     worker_args[i].args = &args;
     pthread_create(&worker_threads[i], NULL, work, &worker_args[i]);
   }
 
-  for (size_t i = 0; i < num_workers; i++) {
+  for (size_t i = 0; i < args.num_workers; i++) {
     pthread_join(worker_threads[i], NULL);
   }
 

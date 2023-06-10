@@ -14,6 +14,7 @@ struct arguments {
   uint32_t x;
   uint32_t y;
   uint32_t len_buffer;
+  uint8_t num_workers;
   uint8_t log_level;
 };
 
