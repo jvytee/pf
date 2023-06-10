@@ -85,20 +85,24 @@ int main(const int argc, char *const *argv) {
   lprintf(LOG_INFO, "Applying offsets (%d, %d) to %d pixelflut commands\n", args.x, args.y, len_cmds);
   apply_offsets(cmds, len_cmds, args.x, args.y);
 
-  size_t num_threads = 5;
-  pthread_t *threads = calloc(num_threads, sizeof(pthread_t *));
-  for (size_t i = 0; i < num_threads; i++) {
-    struct worker_args worker_args;
-    worker_args.cmds = cmds;
-    worker_args.len_cmds = len_cmds;
-    worker_args.args = &args;
-    pthread_create(&threads[i], NULL, work, &worker_args);
+  size_t num_workers = 5;
+  lprintf(LOG_INFO, "Starting %d worker threads\n");
+  pthread_t *worker_threads = calloc(num_workers, sizeof(pthread_t));
+  struct worker_args *worker_args = calloc(num_workers, sizeof(struct worker_args));
+  for (size_t i = 0; i < num_workers; i++) {
+    worker_args[i].cmds = cmds;
+    worker_args[i].len_cmds = len_cmds;
+    worker_args[i].args = &args;
+    pthread_create(&worker_threads[i], NULL, work, &worker_args[i]);
   }
 
-  for (size_t i = 0; i < num_threads; i++) {
-    pthread_join(threads[i], NULL);
+  for (size_t i = 0; i < num_workers; i++) {
+    pthread_join(worker_threads[i], NULL);
   }
 
+  lprintf(LOG_INFO, "Shutting down\n");
+  free(worker_threads);
+  free(worker_args);
   free_commands(cmds, len_cmds);
   free_image(&img);
 
