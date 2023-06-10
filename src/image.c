@@ -74,8 +74,7 @@ void free_image(struct image *img) {
   free(img->pixels);
 }
 
-int generate_commands(struct command **cmds, const struct image *img, const uint32_t x_offset,
-                      const uint32_t y_offset) {
+int generate_commands(struct command **cmds, const struct image *img) {
   if (img->height > 9999 || img->width > 9999) {
     return -1;
   }
@@ -83,7 +82,6 @@ int generate_commands(struct command **cmds, const struct image *img, const uint
   size_t i = 0;
   uint8_t *row;
   uint8_t *pixel;
-  int bytes_written;
 
   for (uint32_t y = 0; y < img->height; y++) {
     row = img->pixels[y];
@@ -95,13 +93,11 @@ int generate_commands(struct command **cmds, const struct image *img, const uint
       }
 
       struct command *cmd = malloc(sizeof(struct command));
-      cmd->x = x + x_offset;
-      cmd->y = y + y_offset;
-      cmd->color = calloc(7, sizeof(char));
-      bytes_written = snprintf(cmd->color, 7, "%02x%02x%02x", pixel[0], pixel[1], pixel[2]);
-      if (bytes_written < 0) {
-        return bytes_written;
-      }
+      cmd->x = x;
+      cmd->y = y;
+      cmd->r = pixel[0];
+      cmd->g = pixel[1];
+      cmd->b = pixel[2];
 
       cmds[i] = cmd;
       i++;
@@ -109,6 +105,13 @@ int generate_commands(struct command **cmds, const struct image *img, const uint
   }
 
   return i;
+}
+
+void apply_offsets(struct command **cmds, const size_t n, const uint32_t x, const uint32_t y) {
+  for (size_t i = 0; i < n; i++) {
+    cmds[i]->x += x;
+    cmds[i]->y += y;
+  }
 }
 
 void shuffle_commands(struct command **cmds, const size_t n) {
@@ -132,7 +135,7 @@ int serialize_commands(char *serialized, struct command *const *cmds, const size
 
   for (size_t i = 0; i < n; i++) {
     cmd = cmds[i];
-    bytes_written = snprintf(serialized_ptr, 21, "PX %u %u %s\n", cmd->x, cmd->y, cmd->color);
+    bytes_written = snprintf(serialized_ptr, 21, "PX %u %u %02x%02x%02x\n", cmd->x, cmd->y, cmd->r, cmd->g, cmd->b);
     if (bytes_written < 0) {
       return bytes_written;
     }
