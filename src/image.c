@@ -114,15 +114,13 @@ void apply_offsets(struct command **cmds, const size_t n, const uint32_t x, cons
   }
 }
 
-void shuffle_commands(struct command **cmds, const size_t n) {
+void shuffle_commands(struct command **shuffled, struct command *const *cmds, const size_t n) {
   size_t j;
-  struct command *tmp;
   for (size_t i = n - 1; i > 0; i--) {
     j = random() % i;
     if (i != j) {
-      tmp = cmds[i];
-      cmds[i] = cmds[j];
-      cmds[j] = tmp;
+      shuffled[i] = cmds[j];
+      shuffled[j] = cmds[i];
     }
   }
 }

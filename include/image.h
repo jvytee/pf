@@ -25,7 +25,7 @@ int read_png(FILE *, struct image *);
 void free_image(struct image *);
 int generate_commands(struct command **, const struct image *);
 void apply_offsets(struct command **, const size_t, const uint32_t, const uint32_t);
-void shuffle_commands(struct command **, const size_t);
+void shuffle_commands(struct command **, struct command *const *, const size_t);
 int serialize_commands(char *, struct command *const *, const size_t);
 int quantize_command_string(char *, const char *, const size_t);
 void free_commands(struct command **, size_t);

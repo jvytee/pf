@@ -24,11 +24,12 @@ void *work(void *args) {
   set_source_thread(source_thread);
 
   lprintf(LOG_INFO, "Shuffling %d pixelflut commands", worker_args->len_cmds);
-  shuffle_commands(worker_args->cmds, worker_args->len_cmds);
+  struct command **cmds_shuffled = calloc(worker_args->len_cmds, sizeof(struct command *));
+  shuffle_commands(cmds_shuffled, worker_args->cmds, worker_args->len_cmds);
 
   lprintf(LOG_INFO, "Serializing %d pixelflut commands", worker_args->len_cmds);
   char *cmds_serialized = calloc(worker_args->len_cmds * 20 + 1, sizeof(char));
-  size_t len_serialized = serialize_commands(cmds_serialized, worker_args->cmds, worker_args->len_cmds);
+  size_t len_serialized = serialize_commands(cmds_serialized, cmds_shuffled, worker_args->len_cmds);
 
   lprintf(LOG_INFO, "Quantizing %d bytes pixelflut command string", len_serialized);
   char *cmds_quantized = calloc(worker_args->args->len_buffer, sizeof(char));
@@ -43,6 +44,7 @@ void *work(void *args) {
     printf("%s", cmds_quantized);
   }
 
+  free(cmds_shuffled);
   free(cmds_quantized);
   free(cmds_serialized);
 
