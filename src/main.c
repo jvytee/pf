@@ -88,9 +88,9 @@ int main(const int argc, char *const *argv) {
     return EXIT_FAILURE;
   }
 
-  lprintf(LOG_INFO, "Creating pixelflut commands");
+  lprintf(LOG_INFO, "Creating pixelflut commands (filtering color 0x%06x)", args.filter);
   struct command **cmds = calloc(img.height * img.width, sizeof(struct command *));
-  const size_t len_cmds = generate_commands(cmds, &img);
+  const size_t len_cmds = generate_commands(cmds, &img, args.filter);
 
   lprintf(LOG_INFO, "Applying offsets (%d, %d) to %d pixelflut commands", args.x, args.y, len_cmds);
   apply_offsets(cmds, len_cmds, args.x, args.y);

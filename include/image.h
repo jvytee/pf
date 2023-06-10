@@ -23,7 +23,7 @@ struct command {
 
 int read_png(FILE *, struct image *);
 void free_image(struct image *);
-int generate_commands(struct command **, const struct image *);
+int generate_commands(struct command **, const struct image *, int32_t);
 void apply_offsets(struct command **, const size_t, const uint32_t, const uint32_t);
 void shuffle_commands(struct command **, struct command *const *, const size_t);
 int serialize_commands(char *, struct command *const *, const size_t);

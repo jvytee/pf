@@ -1,4 +1,5 @@
 #include <png.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -74,7 +75,17 @@ void free_image(struct image *img) {
   free(img->pixels);
 }
 
-int generate_commands(struct command **cmds, const struct image *img) {
+int32_t filter(uint8_t *pixel, int32_t color) {
+  if (color < 0) {
+    return color;
+  }
+
+  uint32_t pixel_norm = (pixel[0] << 24) | (pixel[1] << 16) | (pixel[2] << 8);
+  uint32_t color_norm = color << 8;
+  return pixel_norm - color_norm;
+}
+
+int generate_commands(struct command **cmds, const struct image *img, int32_t filter_color) {
   if (img->height > 9999 || img->width > 9999) {
     return -1;
   }
@@ -88,7 +99,7 @@ int generate_commands(struct command **cmds, const struct image *img) {
 
     for (uint32_t x = 0; x < img->width; x++) {
       pixel = &row[x * img->channels];
-      if (pixel[3] == 0x00) {
+      if (pixel[3] == 0x00 || filter(pixel, filter_color) == 0) {
         continue;
       }
 
