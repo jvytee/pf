@@ -11,6 +11,7 @@
 #define LOG_NOTSET 0
 
 void set_log_level(const uint8_t);
+void set_source_thread(char*);
 void lprintf(const uint8_t, const char*, ...);
 
 #endif

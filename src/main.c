@@ -1,4 +1,5 @@
 #include <pthread.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,10 +14,15 @@ struct worker_args {
   struct command **cmds;
   size_t len_cmds;
   const struct arguments *args;
+  uint8_t num;
 };
 
 void *work(void *args) {
   struct worker_args *worker_args = (struct worker_args*) args;
+  char source_thread[11];
+  snprintf(source_thread, 10, "Worker %d", worker_args->num);
+  set_source_thread(source_thread);
+
   lprintf(LOG_INFO, "Shuffling %d pixelflut commands\n", worker_args->len_cmds);
   shuffle_commands(worker_args->cmds, worker_args->len_cmds);
 
@@ -85,13 +91,14 @@ int main(const int argc, char *const *argv) {
   lprintf(LOG_INFO, "Applying offsets (%d, %d) to %d pixelflut commands\n", args.x, args.y, len_cmds);
   apply_offsets(cmds, len_cmds, args.x, args.y);
 
-  lprintf(LOG_INFO, "Starting %d worker threads\n");
+  lprintf(LOG_INFO, "Starting %d worker threads\n", args.num_workers);
   pthread_t *worker_threads = calloc(args.num_workers, sizeof(pthread_t));
   struct worker_args *worker_args = calloc(args.num_workers, sizeof(struct worker_args));
-  for (size_t i = 0; i < args.num_workers; i++) {
+  for (uint8_t i = 0; i < args.num_workers; i++) {
     worker_args[i].cmds = cmds;
     worker_args[i].len_cmds = len_cmds;
     worker_args[i].args = &args;
+    worker_args[i].num = i;
     pthread_create(&worker_threads[i], NULL, work, &worker_args[i]);
   }
 
