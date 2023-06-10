@@ -24,8 +24,8 @@ int send_forever(const char *host, const uint16_t port, const char *cmds) {
 
   struct addrinfo hints;
   struct addrinfo *res;
-  char port_str[5];
-  snprintf(port_str, 5, "%d", port);
+  char port_str[6];
+  snprintf(port_str, 6, "%d", port);
 
   int memfd = memfd_create("cmds.txt", 0);
   if (memfd == -1) {
