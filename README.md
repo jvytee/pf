@@ -10,10 +10,19 @@ Having worked with cmake in the past, I also wanted to try meson and get my hand
 ## What does it do?
 Read a PNG file, convert it to pixelflut commands and send those to a target host/port forever.
 If no host is specified, the program prints the pixelflut commands and terminates.
-Port ist 1234 by default.
 Usage is pretty straight forward (see `pf -h`):
 ```
-Usage: pf [-H <host>] [-p <port>] [-x <offset>] [-y <offset>] <image>
+Usage: pf [options] <image>
+
+Options:
+-H <host>           Target host name
+-b <buffer size>    Size of command buffer in byte (default: 1 MiB)
+-h                  Show this help and exit
+-p <port>           Target port number (default: 1234)
+-v                  Verbose
+-w <worker count>   Number of worker threads (default: 1)
+-x <offset>         X offset for image coordinates (default: 0)
+-y <offset>         Y offset for image coordinates (default: 0)
 ```
 
 ## How do I build this again?
