@@ -18,7 +18,7 @@ struct worker_args {
 };
 
 void *work(void *args) {
-  struct worker_args *worker_args = (struct worker_args*) args;
+  struct worker_args *worker_args = (struct worker_args *)args;
   char source_thread[11];
   snprintf(source_thread, 11, "Worker %d", worker_args->num);
   set_source_thread(source_thread);
@@ -33,9 +33,11 @@ void *work(void *args) {
 
   lprintf(LOG_INFO, "Quantizing %d bytes pixelflut command string", len_serialized);
   char *cmds_quantized = calloc(worker_args->args->len_buffer, sizeof(char));
-  const size_t len_command_string = quantize_command_string(cmds_quantized, cmds_serialized, worker_args->args->len_buffer);
+  const size_t len_command_string =
+      quantize_command_string(cmds_quantized, cmds_serialized, worker_args->args->len_buffer);
 
-  lprintf(LOG_INFO, "Sending %d bytes pixelflut command string to %s:%d", len_command_string, worker_args->args->host, worker_args->args->port);
+  lprintf(LOG_INFO, "Sending %d bytes pixelflut command string to %s:%d", len_command_string, worker_args->args->host,
+          worker_args->args->port);
   if (worker_args->args->host != NULL) {
     if (send_forever(worker_args->args->host, worker_args->args->port, cmds_quantized) != EXIT_SUCCESS) {
       lprintf(LOG_ERROR, "Could not send commands to %s:%d", worker_args->args->host, worker_args->args->port);

@@ -41,7 +41,8 @@ int parse_arguments(const int argc, char *const *argv, struct arguments *args) {
       args->log_level = LOG_INFO;
       break;
     case 'h':
-      printf("Usage: pf [-H <host>] [-p <port>] [-x <offset>] [-y <offset>] [-b <buffer size>] [-w <worker count>] <image>\n");
+      printf("Usage: pf [-H <host>] [-p <port>] [-x <offset>] [-y <offset>] [-b <buffer size>] [-w <worker count>] "
+             "<image>\n");
       return CLI_HELP;
     default:
       return CLI_FAILURE;
